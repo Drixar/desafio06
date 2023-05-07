@@ -1,7 +1,7 @@
-const express = require("express");
-const manager = require('../CartManager')
+import express from 'express';
+import { DaoCarts } from '../../daos/index.js'
 const cartRouter = express.Router();
-const cartManager = new manager('./files/','carrito.json');
+const cartManager = DaoCarts;
 
 
 
@@ -116,4 +116,4 @@ cartRouter.post("/:cid/products/:pid", async(req,res)=>{
 
     }
 })
-module.exports = cartRouter;
+export default cartRouter;

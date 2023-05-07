@@ -1,15 +1,21 @@
-const express = require("express");
-const handlebars = require('express-handlebars');
-const {Server} = require("socket.io");
-const path = require("path");
-const manager = require('./ProductManager')
-const productRouter = require("./routes/productRouter");
-const cartRouter = require("./routes/cartRouter")
-const viewsRouter = require('./routes/viewsRouter')
+import express from 'express';
+import handlebars from 'express-handlebars';
+import {Server} from 'socket.io';
+import path from 'path';
+import {DaoProducts,DaoCarts,DaoChats} from "../daos/index.js";
+import productRouter from "./routes/productRouter.js";
+import cartRouter from "./routes/cartRouter.js"
+import viewsRouter from './routes/viewsRouter.js';
+import {fileURLToPath} from 'url';
 
 const app = express();
 
-const productManager = new manager('./files/','productos.json');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const productsService = DaoProducts;
+const chatService = DaoChats;
+const cartService = DaoChats;
 
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, ()=>console.log(`listening on port ${PORT}`));
@@ -35,24 +41,30 @@ app.use("/", viewsRouter);
 //trabajar con archivos estaticos de la carpeta public
 app.use(express.static(__dirname+"/public"));
 
+let historicoMensajes = [];
+
 //websocket
-io.on("connection",async (socket)=>{
+io.on("connection",async(socket)=>{
     console.log("nuevo usuario conectado", socket.id);
 
-    //enviar todos los productos al usuario cuando se conecte.
-    const [status, message, productos]  = await productManager.getAll();
-    socket.emit("products", productos)
+    socket.emit("products", await productsService.getAll())
 
     //recibimos el nuevo producto del cliente y lo guardamos
     socket.on("newProduct",async(data)=>{
-        await productManager.addProduct(data);
+        await productsService.save(data);
         //enviamos la lista de productos actualizada a todos los sockets conectados
-        io.sockets.emit("products", await productManager.getAll());
+        io.sockets.emit("products", await productsService.getAll());
     })
 
     //enviar a todos menos al socket conectado
     socket.broadcast.emit("newUser");
 
+     socket.emit("historico", await chatService.getAll());
+
+    socket.on("message",async data=>{
+        await chatService.add(data)
+        io.sockets.emit("historico",await chatService.getAll());
+    });
 })
 
-module.exports = io;
+export default io;

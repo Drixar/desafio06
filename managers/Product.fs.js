@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from 'fs';
 
 class ProductManager{
     constructor(dirFile,nameFile){
@@ -6,7 +6,7 @@ class ProductManager{
         this.path = dirFile;    
     }
 
-    addProduct = async(product)=>{
+    add = async(product)=>{
         try {
             //leer el archivo existe
             if(fs.existsSync(this.path.concat('', this.nameFile))){

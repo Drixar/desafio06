@@ -1,8 +1,7 @@
-const express = require("express");
-const manager = require('../ProductManager')
+import express from "express"
+import {DaoProducts} from "../../daos/index.js";
 const productsRouter = express.Router();
-const productManager = new manager('./files/','productos.json');
-const io = require('../server')
+const productManager = DaoProducts;
 
 
 productsRouter.get("/:id", async(req,res, next)=>{
@@ -97,4 +96,4 @@ productsRouter.delete("/:id", async(req,res)=>{
 })
 
 
-module.exports = productsRouter;
+export default productsRouter;

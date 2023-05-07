@@ -1,12 +1,32 @@
-<div class="container">
-    <div class="row">
-        <div class="col col-sm-12 text-center">
-            <h1 class="text-center mt-3">Listado de Productos</h1>
-            <div class="text-center">
-                <div id="productsContainer"></div>
-            </div>
-        </div>
+<div class='container'>
+  <div class='row'>
+    <div class='col col-sm-7 text-center'>
+      <h1 class='text-center mt-3'>Listado de Productos</h1>
+      <div class='text-center'>
+        <div id='productsContainer'></div>
+      </div>
     </div>
+    <div class='col col-sm-4 mb-2 bg-secondary text-white'>
+      <h2>Chat</h2>
+      <div class='row'>
+        <div class='col col-sm-7 text-center'>
+          <input type='text' id='messageField' />
+        </div>
+        <div class='col col-sm-4 text-center'>
+          <button
+            type='submit'
+            class='btn btn-primary mx-3'
+            id='sendBoton'
+          >Enviar</button>
+        </div>
+      </div>
+
+      <div id='messageContainer'></div>
+    </div>
+  </div>
 </div>
-<script src='/socket.io/socket.io.js'></script>
-<script src="./index.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+</script>
+<script src='../public/index.js'></script>

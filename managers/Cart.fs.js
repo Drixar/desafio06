@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from 'fs';
 
 class CartManager{
     constructor(dirFile,nameFile){
@@ -6,7 +6,7 @@ class CartManager{
         this.path = dirFile;    
     }
 
-    addCart = async(products)=>{ // products es un Array de Objetos {id: id del producto a agrgar, quantity: cantidad a agregar}
+    add = async(products)=>{ // products es un Array de Objetos {id: id del producto a agrgar, quantity: cantidad a agregar}
         try {
             const newproducts = products.filter(item=>item.id > 0 && item.quantity > 0);
             if (newproducts.length > 0 )
