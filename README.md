@@ -85,3 +85,5 @@ Se incluye en el directorio raíz del pryecto un archivo con datos de ejemplo, p
 
 **POST /:id/product/:id** Agregar el producto, cuyo id se suminitra, al arreglo “products” del carrito seleccionado,
 > la cantidad del producto agregado se suminstra por body en formato.json *{ "quantity": 2}*, ya que no se espécificaba.
+> Si el producto ya existe en el carrito, la cantidad consignada por body, se suma a la cantidad ya existente en el carrito.
+

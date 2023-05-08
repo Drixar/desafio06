@@ -20,6 +20,7 @@ const cartService = DaoChats;
 const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, ()=>console.log(`listening on port ${PORT}`));
 const io = new Server(server);
+console.log(new Date())
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));

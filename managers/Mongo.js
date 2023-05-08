@@ -16,7 +16,7 @@ class ManagerMongo{
 
     async getById(id) {
         try {
-            const dato = await this.model.find({_id: id})
+            const dato = await this.model.findById(id);         
             return ['200', "Archivo de leído Correctamente", dato];
         } catch (error) {
             return [error, `Error ${error}`, null];
@@ -27,7 +27,7 @@ class ManagerMongo{
         try {
             const dato = await this.model.create(newData);
             console.log("archivo guardado correctamente");
-            return ['200', "Archivo grabado Correctamente", newData];
+            return ['200', "Archivo grabado Correctamente", dato];
         } catch (error) {
             return [error, `Error ${error}`, null];
         }
@@ -36,7 +36,7 @@ class ManagerMongo{
     async updateById(id, newData){
         try {
             const data = await this.model.updateOne({_id:id}, {$set: newData});
-            return ['200', `Registro ${id} actualizado Correctamente`, data];
+            return ['200', `Registro ${id} actualizado Correctamente`, await this.model.findById(id)];
         } catch (error) {
             return [error, `Error ${error}`, null];
         }

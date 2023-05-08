@@ -8,7 +8,8 @@ const cartManager = DaoCarts;
 cartRouter.get("/:id", async(req,res, next)=>{
     const {id} = req.params;
     console.log("id", id)
-    const [status, message, carrito] = await cartManager.getById(parseInt(id));
+    const [status, message, carrito] = await cartManager.getById(id);
+    console.log(carrito)
     switch(status) {
         case '200': 
             res.status(200).send({
@@ -43,7 +44,7 @@ cartRouter.get("/", async(req, res, next) => {
 
 cartRouter.post("/",async(req,res,next)=>{
     const products = req.body;
-    const [status, message, carritos] = await cartManager.addCart(products);
+    const [status, message, carritos] = await cartManager.add(products);
     switch(status) {
         case '200': 
             res.status(200).send({
@@ -62,7 +63,7 @@ cartRouter.post("/",async(req,res,next)=>{
 cartRouter.put("/:id", async(req,res)=>{
     const {id} = req.params;
     const products = req.body;
-    const [status, message, CarritoActualizado] = await cartManager.updateById(parseInt(id),products);
+    const [status, message, CarritoActualizado] = await cartManager.updateById(id,products);
     switch(status) {
         case '200': 
             res.status(200).send({
@@ -80,7 +81,7 @@ cartRouter.put("/:id", async(req,res)=>{
 
 cartRouter.delete("/:id", async(req,res)=>{
     const {id} = req.params;
-        const [status, message, carritos] = await cartManager.deleteById(parseInt(id));
+        const [status, message, carritos] = await cartManager.deleteById(id);
         switch(status) {
             case '200': 
                 res.status(200).send({
@@ -97,16 +98,22 @@ cartRouter.delete("/:id", async(req,res)=>{
 })
 
 cartRouter.post("/:cid/products/:pid", async(req,res)=>{
-    const cid = +req.params.cid;
-    const pid = +req.params.pid;
+    const cid = req.params.cid;
+    const pid = req.params.pid;
     const productQuantity = req.body.quantity;  // la cantidad de productos se pasa por body params ya que en la consigna no se especifica 
                                                 // la pasé en formato.json { "quantity": 2}
-    const [status, message, CarritoActualizado] = await cartManager.updateById(cid,{id: pid, quantity: productQuantity});
+    let [prevStatus, prevMessage, cart] = await cartManager.getById(cid);
+    if(cart.products.some((element) => element.id == pid)){
+        cart.products[cart.products.findIndex(x => x.id == pid)].quantity += productQuantity;
+    } else {
+        cart.products.push({id: pid, quantity: productQuantity})
+    }
+    const [status, message, carritoActualizado] = await cartManager.updateById(cid,cart);
     switch(status) {
         case '200': 
             res.status(200).send({
                 message:message,
-                response: CarritoActualizado
+                response: carritoActualizado
             });
             return
         case '404':

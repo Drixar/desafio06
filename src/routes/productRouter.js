@@ -6,8 +6,8 @@ const productManager = DaoProducts;
 
 productsRouter.get("/:id", async(req,res, next)=>{
     const {id} = req.params;
-    console.log("id", id)
-    const [status, message, product] = await productManager.getById(parseInt(id));
+    console.log(id)
+    const [status, message, product] = await productManager.getById(id);
     switch(status) {
         case '200': 
             res.status(200).send({
@@ -42,7 +42,7 @@ productsRouter.get("/", async(req, res, next) => {
 
 productsRouter.post("/",async(req,res,next)=>{
     const newProduct = req.body;
-    const [status, message, productos] = await productManager.addProduct(newProduct);
+    const [status, message, productos] = await productManager.add(newProduct);
     switch(status) {
         case '200': 
         req.io.emit("products", productos);
@@ -62,7 +62,7 @@ productsRouter.post("/",async(req,res,next)=>{
 productsRouter.put("/:id", async(req,res)=>{
     const {id} = req.params;
     const newInfo = req.body;
-    const [status, message, productosActualizados]  = await productManager.updateById(parseInt(id),newInfo);
+    const [status, message, productosActualizados]  = await productManager.updateById(id,newInfo);
     switch(status) {
         case '200': 
         req.io.emit("products", productosActualizados);
@@ -80,7 +80,7 @@ productsRouter.put("/:id", async(req,res)=>{
 
 productsRouter.delete("/:id", async(req,res)=>{
     const {id} = req.params;
-        const [status, message, productosActualizados]  = await productManager.deleteById(parseInt(id));
+        const [status, message, productosActualizados]  = await productManager.deleteById(id);
         switch(status) {
             case '200': 
                 res.status(200).send({

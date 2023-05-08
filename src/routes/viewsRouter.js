@@ -5,11 +5,9 @@ const productManager = DaoProducts;
 
 viewsRouter.get("/", async(req, res, next) => {
     const [status, message, productos] = await productManager.getAll();
-    console.log(productos)
     switch(status) {
         case '200': 
             res.render('index', {productos});
-            console.log("productos")
             return;
         case '404':
             res.status(404).send({
