@@ -19,6 +19,7 @@ viewsRouter.get("/", async(req, res, next) => {
 viewsRouter.get("/realtimeproducts", async(req, res, next) => {
     // const limit = req.query.limit? +req.query.limit : 0;
     const [status, message, productos] = await productManager.getAll();
+    console.log(productos)
     switch(status) {
         case '200': 
             res.render('realTimeProducts', {productos});
